@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour {
     void Start () {
 
         currentGameState = gameState.preplay;
+        Debug.Log(currentGameState);
 
 	}
 	

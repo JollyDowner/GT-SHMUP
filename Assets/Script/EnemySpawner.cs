@@ -49,7 +49,7 @@ public class EnemySpawner : MonoBehaviour {
         leftSpawnBorder = -21;
 
         intensity = 3;
-        spawnTime = 0.75f;
+        spawnTime = 1.25f;
    
         gameMan = GameManager.instance;
         enemy = gameMan.enemy;
@@ -67,7 +67,7 @@ public class EnemySpawner : MonoBehaviour {
 
  IEnumerator SpawnEnemies()
     {
-
+        yield return new WaitForSeconds(2f);
 
         while (true)
         {
