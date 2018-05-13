@@ -4,10 +4,13 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
+		
 		_DissolveFactor("DissolveFactor",Range(0.0,1.0)) = 0
 		_DissolveTexture("Noise Texture",2D)="white"{}
-		_BurnDistance("Burn Distance",Range(0.0,2.0))=0.5
+		
+		_BurnDistance("Burn Distance",Range(0.0,2.0))=0.0
 		_BurnColor("Burn Color",Color)=(1,0,0,1)
+
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" "Queue" = "Transparent"}

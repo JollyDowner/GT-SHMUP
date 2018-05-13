@@ -5,18 +5,19 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour {
 
 
-    public float[] spawnPointX;
+
 
     public int leftSpawnBorder;
     public int rightSpawnBorder;
-    public float upperSpawnBorder;
-    public float lowerSpawnBorder;
 
     public float zLock;
     public float yLock;
 
+    public float middlePoint;
+    public float[] spawnPoints;
 
-    public float spawnTime;
+
+    public float spawnBreakTime;
     private int intensity;
 
     public GameObject enemy;
@@ -44,12 +45,13 @@ public class EnemySpawner : MonoBehaviour {
     {
         zLock = 6f;
         yLock = 1.88f;
+        middlePoint = -4.5f;
 
         rightSpawnBorder = 12;
         leftSpawnBorder = -21;
 
         intensity = 3;
-        spawnTime = 1.25f;
+        spawnBreakTime = 1.25f;
    
         gameMan = GameManager.instance;
         enemy = gameMan.enemy;
@@ -72,28 +74,28 @@ public class EnemySpawner : MonoBehaviour {
         while (true)
         {
             int spawnNumber = intensity + 1;
-            spawnPointX = new float[spawnNumber];
+            spawnPoints = new float[spawnNumber];
             float randomPoint = Random.Range(leftSpawnBorder, rightSpawnBorder);
             float step = 2.2f;
 
-            if (randomPoint > -4.5f) { step = step * -1; }
+            if (randomPoint > middlePoint) { step = step * -1; }
 
 
 
             for(int i = 0; i < spawnNumber; i++)
             {
-                spawnPointX[i] = randomPoint + step* i;
+                spawnPoints[i] = randomPoint + step* i;
             }
 
 
-            for (int i =0; i <spawnPointX.Length; i++)
+            for (int i =0; i <spawnPoints.Length; i++)
             {
 
-                Instantiate(enemy, new Vector3(spawnPointX[i], yLock, zLock), new Quaternion(0, 0, 0, 0));
+                Instantiate(enemy, new Vector3(spawnPoints[i], yLock, zLock), new Quaternion(0, 0, 0, 0));
 
             }       
 
-            yield return new WaitForSeconds(spawnTime);
+            yield return new WaitForSeconds(spawnBreakTime);
         }
             
     }

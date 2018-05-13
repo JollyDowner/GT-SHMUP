@@ -4,32 +4,39 @@ using UnityEngine;
 
 
 
-public class GenericEnemy : MonoBehaviour {
+public class EnemyBehaviour : MonoBehaviour {
     public float turnVelocity;
-    public float moveIntoScreenVelocity;
-    public float seekVelocity;
+    public float enterScreenVelocity;
+    public float chargeVelocity;
     public int scoreValue;
 
 
     public UiManager uiMan;
+    public GameManager gameMan;
     public GameObject player;
     public Collider enemyCollider;
 
-    bool isInvisible = false;
+    bool isHit= false;
     // Use this for initialization
     void Start () {
 
-        scoreValue = 25;
+        gameMan = GameManager.instance;
         uiMan = UiManager.instance;
-        turnVelocity = 5;
-        StartCoroutine("GenericMovement");
-        StartCoroutine("Rotation");
+ 
+
         enemyCollider = GetComponent<Collider>();
         enemyCollider.enabled =  !enemyCollider.enabled;
-        player = GameObject.Find("Player");
-        seekVelocity = 50f;
+        player =gameMan.player;
 
 
+
+        turnVelocity = 5f;
+        chargeVelocity = 40f;
+        scoreValue = 25;
+
+
+        StartCoroutine("GenericMovement");
+        StartCoroutine("Rotation");
     }
 	
 	// Update is called once per frame
@@ -41,10 +48,18 @@ public class GenericEnemy : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(collision.gameObject);
-        Destroy(this.gameObject);
+        isHit = true;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        gameObject.AddComponent<BurnDissvoleBehaviour>();
+        GetComponent<BurnDissvoleBehaviour>().dissolveSpeed = 0.1f;
 
-        if (collision.gameObject.CompareTag("PlayerBullet")) { uiMan.updateScore(scoreValue); }
+
+        if (collision.gameObject.CompareTag("PlayerBullet"))
+        {
+            uiMan.updateScore(scoreValue);
+            Destroy(collision.gameObject);
+
+        }
  
         
     }
@@ -59,28 +74,28 @@ public class GenericEnemy : MonoBehaviour {
     private void OnBecameInvisible()
     {
         Destroy(gameObject);
-        isInvisible = true;
+
     }
 
 
     IEnumerator GenericMovement()
     {
- 
-        while(transform.position.z >= -2)
+        player = gameMan.player;
+        while (transform.position.z >= -2)
         {
 
-            transform.position += new Vector3(0,0,-10+moveIntoScreenVelocity)*Time.deltaTime;
+            transform.position += new Vector3(0,0,-10+enterScreenVelocity)*Time.deltaTime;
             yield return 0;
         }
 
         yield return new WaitForSeconds(0.25f);
 
-        Vector3 enemyTarget = (player.transform.position - transform.position).normalized;
+        Vector3 direction =Vector3.back.normalized;
 
-        while (!isInvisible)
+        while (!isHit)
         {
    
-            transform.position += enemyTarget*seekVelocity*Time.deltaTime;
+            transform.position += direction*chargeVelocity*Time.deltaTime;
 
             yield return 0;
         }
